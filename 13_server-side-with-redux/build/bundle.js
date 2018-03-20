@@ -54,16 +54,25 @@
 
 	var _reactRedux = __webpack_require__(184);
 
+	var _redux = __webpack_require__(193);
+
 	var _App = __webpack_require__(215);
 
-	var _reducer = __webpack_require__(217);
+	var _App2 = _interopRequireDefault(_App);
+
+	var _reducer = __webpack_require__(216);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// Grab the state from a global variable injected into the server-generated HTML
+	var initialState = window.__REDUX_STATE__212;
+	// Create Redux store with initial state
+	var store = (0, _redux.createStore)(_reducer.todoReducer, initialState);
+
 	(0, _reactDom.render)(_react2.default.createElement(
 		_reactRedux.Provider,
-		{ store: _reducer.store },
-		_react2.default.createElement(_App.ConnectedApp, null)
+		{ store: store },
+		_react2.default.createElement(_App2.default, null)
 	), document.getElementById('root'));
 
 /***/ }),
@@ -23786,9 +23795,6 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.ConnectedApp = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(1);
 
@@ -23796,111 +23802,44 @@
 
 	var _reactRedux = __webpack_require__(184);
 
-	var _actions = __webpack_require__(216);
-
-	var _reducer = __webpack_require__(217);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	//VIEW
-	var App = function (_Component) {
-		_inherits(App, _Component);
-
-		function App() {
-			_classCallCheck(this, App);
-
-			return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
-		}
-
-		_createClass(App, [{
-			key: 'addTodo',
-			value: function addTodo() {
-				_reducer.store.dispatch((0, _actions.addTodo)());
-			}
-		}, {
-			key: 'finished',
-			value: function finished(id) {
-				_reducer.store.dispatch((0, _actions.finishTodo)(id));
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
-
-				var todos = this.props.data.map(function (item, index) {
-					return _react2.default.createElement(
-						'div',
-						{ key: index, className: 'todos' },
-						_react2.default.createElement(
-							'span',
-							{ onClick: function onClick() {
-									return _this2.finished(item.id);
-								}, className: item.completed ? 'striked' : '' },
-							item.text
-						)
-					);
-				});
-
-				return _react2.default.createElement(
-					'div',
-					{ className: 'dashedBox' },
-					_react2.default.createElement(
-						'button',
-						{ onClick: this.addTodo },
-						'+ Add Todo'
-					),
-					_react2.default.createElement(
-						'div',
-						null,
-						todos
-					)
-				);
-			}
-		}]);
-
-		return App;
-	}(_react.Component);
+	var App = function App(props) {
+		return _react2.default.createElement(
+			'div',
+			null,
+			_react2.default.createElement(
+				'button',
+				{ onClick: function onClick() {
+						return props.increment();
+					} },
+				'+'
+			),
+			_react2.default.createElement(
+				'h1',
+				null,
+				props.data
+			)
+		);
+	};
 
 	//CONNECT REDUX TO REACT
+	var ConnectedApp = (0, _reactRedux.connect)(function (state) {
+		return {
+			data: state
+		};
+	}, function (dispatch) {
+		return {
+			increment: function increment() {
+				dispatch({ type: 'INCREMENT' });
+			}
+		};
+	})(App);
 
-
-	var mapStateToProps = function mapStateToProps(state) {
-		return { data: state };
-	};
-	var ConnectedApp = exports.ConnectedApp = (0, _reactRedux.connect)(mapStateToProps)(App);
+	exports.default = ConnectedApp;
 
 /***/ }),
 /* 216 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	var ADD_TODO = 'ADD_TODO';
-	var FINISH_TODO = 'FINISH_TODO';
-
-	var randomTodos = ["Read a book", "Play video games", "Listen to music", "Wash dishes", "Take out garbage", "Drive wife to shopping market", "Go to work", "Collect salary", "Idle"];
-
-	var addTodo = function addTodo() {
-	  return { type: ADD_TODO, text: randomTodos[Math.floor(Math.random() * randomTodos.length)] };
-	};
-	var finishTodo = function finishTodo(index) {
-	  return { type: FINISH_TODO, index: index };
-	};
-
-	exports.addTodo = addTodo;
-	exports.finishTodo = finishTodo;
-
-/***/ }),
-/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23908,38 +23847,23 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.store = undefined;
+	exports.todoReducer = undefined;
 
 	var _redux = __webpack_require__(193);
 
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	/*
-	this reducer's state is an array
-	*/
-	//REDUCER
 	var todoReducer = function todoReducer() {
-		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+		var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 77;
 		var action = arguments[1];
 
-
 		switch (action.type) {
-
-			case 'ADD_TODO':
-				var newTodo = { id: state.length, text: action.text, completed: false };
-				return [].concat(_toConsumableArray(state), [newTodo]);
-
-			case 'FINISH_TODO':
-				return state.map(function (todo, index) {
-					if (index === action.index) return Object.assign({}, todo, { completed: true });
-					return todo;
-				});
-
+			case 'INCREMENT':
+				return state + 1;
 			default:
 				return state;
 		}
 	};
-	var store = exports.store = (0, _redux.createStore)(todoReducer);
+
+	exports.todoReducer = todoReducer;
 
 /***/ })
 /******/ ]);

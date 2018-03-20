@@ -35,7 +35,7 @@ const Chrome = props => (
 		</div>
 
 		<footer style={footerStyle}>
-			<small><strong>&copy;2017</strong></small>
+			<small><strong>&copy;2018</strong></small>
 		</footer>
 	</div>
 )
