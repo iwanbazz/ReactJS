@@ -42,7 +42,7 @@ __Catatan__: Selain untuk NPM, kita juga akan membutuhkan Node untuk membuat seb
 
 ## Pengenalan ES6
 
-[Pengenalan ES6.](https://github.com/arisetyo/belajar-react/tree/master/3_es6)
+[Pengenalan ES6.](https://github.com/iwanbazz/ReactJS/tree/master/3_es6)
 
 ## Penggunaan Babel dan Webpack
 
